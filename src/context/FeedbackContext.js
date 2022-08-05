@@ -25,12 +25,6 @@ export const FeedbackProvider = ({ children }) => {
         setFeedback(data)
         setIsLoading(false)
     }
-    const editFeedback = (item) => {
-        setFeedbackEdit({
-            item,
-            edit : true
-        })
-    }
 
     const addFeedback = async (newFeedback) => {
         const res = await fetch('/feedback',{
@@ -43,17 +37,33 @@ export const FeedbackProvider = ({ children }) => {
         const data = await res.json()
         setFeedback([data, ...feedback])
     }
-    const updateFeedback = async (id,updItem) => {
-        const res = await fetch('/feedback',{
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updItem)
+
+    const updateFeedback = async (id, updItem) => {
+        const response = await fetch(`/feedback/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updItem),
         })
-        const data = await res.json()
-        setFeedback(feedback.map((item) => (item.id === id) ? { ...item, ...data} : item))
-    }
+    
+        const data = await response.json()
+    
+        setFeedback(feedback.map((item) => (item.id === id ? data : item)))
+    
+        setFeedbackEdit({
+          item: {},
+          edit: false,
+        })
+      }
+    
+      const editFeedback = (item) => {
+        setFeedbackEdit({
+          item,
+          edit: true,
+        })
+      }
+
     const deleteFeedback = async (id) => {
         if(window.confirm('Are you sure you want to delete?')){
             await fetch(`/feedback/${id}`,{ method: 'DELETE' })
