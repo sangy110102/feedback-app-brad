@@ -4,12 +4,12 @@ import FeedbackItem from "./FeedbackItem";
 import FeedbackContext from "../context/FeedbackContext";
 function FeedbackList() {
     //console.log(feedback)
-    const { feedback,handleDelete } = useContext(FeedbackContext)
-    if(!feedback || feedback.length === 0){
+    const { feedback, handleDelete, isLoading } = useContext(FeedbackContext)
+    if(!isLoading && (!feedback || feedback.length === 0)){
         return <p>No Feedback Yet</p>
     }
 
-    return (
+    return isLoading ? <div className="loader"></div> : (
       <div className="feedback-list">
         <AnimatePresence>
           {feedback.map((item,index) =>
